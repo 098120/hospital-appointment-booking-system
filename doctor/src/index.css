@@ -9,3 +9,10 @@
   --color-gray-800: #2f3136;
 
 }
+gridTemplatesColumns:{
+  'auto':'repeat(auto-fit,minmax(200px,1fr))'
+} 
+
+::-webkit-scrollbar{
+  @apply hidden
+}
