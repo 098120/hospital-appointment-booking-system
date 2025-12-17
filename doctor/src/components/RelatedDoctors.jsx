@@ -11,11 +11,21 @@ const RelatedDoctors = ({ speciality, docId }) => {
   useEffect(() => {
     if (doctors.length > 0 && speciality) {
       const doctorData = doctors.filter(
-        (doc) => doc.speciality === speciality && doc._id !== docId
+        (doc) =>
+          doc.speciality?.toLowerCase() === speciality?.toLowerCase() &&
+          doc._id !== docId
       )
       setRelDocs(doctorData)
     }
   }, [doctors, speciality, docId])
+
+  if (relDoc.length === 0) {
+    return (
+      <p className="text-center text-gray-400 mt-10">
+        No related doctors found
+      </p>
+    )
+  }
 
   return (
     <div className='flex flex-col items-center gap-4 my-16 text-gray-900 md:mx-10'>
@@ -36,7 +46,11 @@ const RelatedDoctors = ({ speciality, docId }) => {
             }}
             className='border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:-translate-y-2 transition-all duration-500'
           >
-            <img className='bg-blue-50 w-full' src={item.image} alt={item.name} />
+            <img
+              className='bg-blue-50 w-full'
+              src={item.image || '/doctors/default.png'}
+              alt={item.name}
+            />
 
             <div className='p-4'>
               <div className='flex items-center gap-2 text-sm text-green-500 mb-1'>
@@ -51,9 +65,6 @@ const RelatedDoctors = ({ speciality, docId }) => {
         ))}
       </div>
 
-      <button className='mt-6 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700'>
-        More
-      </button>
     </div>
   )
 }
