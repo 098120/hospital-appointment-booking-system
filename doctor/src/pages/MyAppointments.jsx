@@ -3,14 +3,7 @@ import { AppContext } from '../context/AppContext'
 
 const MyAppointments = () => {
 
-  const context = useContext(AppContext)
-
-  // SAFETY CHECK
-  if (!context || !context.doctors) {
-    return <p className="mt-10 text-center">Loading appointments...</p>
-  }
-
-  const { doctors } = context
+  const { doctors } = useContext(AppContext)
 
   return (
     <div>
@@ -19,13 +12,7 @@ const MyAppointments = () => {
       </p>
 
       <div>
-        {doctors.length === 0 && (
-          <p className="text-sm text-gray-500 mt-6">
-            No appointments found
-          </p>
-        )}
-
-        {doctors.slice(0, 2).map((item, index) => (
+        {doctors?.length > 0 && doctors.slice(0, 2).map((item, index) => (
           <div
             key={index}
             className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b'
