@@ -1,29 +1,31 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { AppContext } from '../context/AppContext';
+import React, { useContext, useEffect, useState } from 'react'
+import { useParams, useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
 
 const Doctor = () => {
-  const { speciality } = useParams();
-  const navigate = useNavigate();
-  const { doctors } = useContext(AppContext);
 
-  const [filterDoc, setFilterDoc] = useState([]);
+  const { speciality } = useParams()
+  const navigate = useNavigate()
+  const { doctors } = useContext(AppContext)
+
+  const [filterDoc, setFilterDoc] = useState([])
+  const [showFilters, setShowFilters] = useState(false)
 
   // helper
-  const isActive = (name) => speciality === name;
+  const isActive = (name) => speciality === name
 
   // filter doctors
   useEffect(() => {
     if (speciality) {
-      const formatted = speciality.replace('-', ' ');
+      const formatted = speciality.replace('-', ' ')
       const filtered = doctors.filter(
         (doc) => doc.speciality.toLowerCase() === formatted.toLowerCase()
-      );
-      setFilterDoc(filtered);
+      )
+      setFilterDoc(filtered)
     } else {
-      setFilterDoc(doctors);
+      setFilterDoc(doctors)
     }
-  }, [doctors, speciality]);
+  }, [doctors, speciality])
 
   return (
     <div>
@@ -31,9 +33,20 @@ const Doctor = () => {
 
       <div className="flex flex-col sm:flex-row items-start gap-5 mt-5">
 
-        {/* ---------- Left Section ---------- */}
-        <div className="flex flex-col gap-4 text-sm text-gray-600">
+        {/* MOBILE FILTER BUTTON */}
+        <button
+          className={`py-1 px-3 border rounded text-sm transition-all sm:hidden
+            ${showFilters ? 'bg-primary text-white' : ''}`}
+          onClick={() => setShowFilters(prev => !prev)}
+        >
+          Filters
+        </button>
 
+        {/* ---------- Left Section ---------- */}
+        <div
+          className={`flex flex-col gap-4 text-sm text-gray-600
+            ${showFilters ? 'flex' : 'hidden'} sm:flex`}
+        >
           {[
             'General-Physician',
             'Gynecologist',
@@ -60,7 +73,6 @@ const Doctor = () => {
               {item.replace('-', ' ')}
             </p>
           ))}
-
         </div>
 
         {/* ---------- Right Section ---------- */}
@@ -93,7 +105,8 @@ const Doctor = () => {
 
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Doctor;
+export default Doctor
+

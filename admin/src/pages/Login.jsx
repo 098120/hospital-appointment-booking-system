@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react'
 import { assets } from '../assets/assets'
 import { AdminContext } from '../context/AdminContext'
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Login = () => {
 
@@ -22,8 +23,11 @@ const Login = () => {
         )
 
         if (data.success) {
+          localStorage.setItem('aToken',data.token)
           console.log(data.token)
           setAToken(data.token)
+        } else {
+          toast.error(data.message)
         }
 
       } else {

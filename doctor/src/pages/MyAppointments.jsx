@@ -12,7 +12,7 @@ const MyAppointments = () => {
       </p>
 
       <div>
-        {doctors?.length > 0 && doctors.slice(0, 2).map((item, index) => (
+        {doctors?.length > 0 && doctors.slice(0, 3).map((item, index) => (
           <div
             key={index}
             className='grid grid-cols-[1fr_2fr] gap-4 sm:flex sm:gap-6 py-2 border-b'
@@ -40,7 +40,7 @@ const MyAppointments = () => {
                 26 Jan, 2026
               </p>
             </div>
-
+              <div></div>
             <div className='flex flex-col gap-2 justify-end'>
               <button className='text-sm text-stone-500 text-center sm:min-w-48 py-2 border hover:bg-primary hover:text-white transition-all duration-300'>
                 Pay Online
