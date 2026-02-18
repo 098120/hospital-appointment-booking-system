@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import { AppContext } from '../context/AppContext'
 
 const Navbar = () => {
 
   const navigate = useNavigate()
+
+  const { token, setToken } = useContext(AppContext)
+
   const [showMenu, setShowMenu] = useState(false)
-  const [token, setToken] = useState(true)
+
+  const logout = () => {
+    setToken('false')
+    localStorage.removeItem('token')
+  }
 
   const linkClass = ({ isActive }) =>
     `px-3 py-1 rounded-md transition-all duration-300
@@ -42,7 +50,7 @@ const Navbar = () => {
             <div className='absolute right-0 top-10 hidden group-hover:block bg-white shadow rounded-md w-48 p-4 z-20'>
               <p onClick={() => navigate('/my-profile')} className='cursor-pointer hover:text-blue-600'>My Profile</p>
               <p onClick={() => navigate('/my-appointments')} className='cursor-pointer hover:text-blue-600 mt-2'>My Appointments</p>
-              <p onClick={() => setToken(false)} className='cursor-pointer hover:text-red-500 mt-2'>Logout</p>
+              <p onClick={logout} className='cursor-pointer hover:text-red-500 mt-2'>Logout</p>
             </div>
           </div>
         ) : (
