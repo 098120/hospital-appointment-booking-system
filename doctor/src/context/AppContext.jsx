@@ -19,6 +19,8 @@ const AppContextProvider = (props) => {
         `${backendUrl}/api/doctor/list`
       )
 
+      console.log("data is",data)
+
       if (data.success) {
         setDoctorList(data.doctors)
       } else {

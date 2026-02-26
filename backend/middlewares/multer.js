@@ -1,11 +1,11 @@
 import multer from 'multer'
 
-const Storage = multer.diskStorage({
-    filename: function(req,file,callback){
-        callback(null,file.originalname)
+const storage = multer.diskStorage({
+    filename: function (req, file, callback) {
+        callback(null, file.originalname)
     }
 })
 
-const upload = multer({Storage})
+const upload = multer({ storage: storage })
 
 export default upload

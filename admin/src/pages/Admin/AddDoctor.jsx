@@ -28,7 +28,7 @@ const AddDoctor = () => {
                 return toast.error('Image Not Selected')
             }
 
-            const formData = new FormData()
+            const formData = new FormData();
 
             formData.append('docImage', docImage)
             formData.append('name', name)
@@ -36,8 +36,8 @@ const AddDoctor = () => {
             formData.append('password', password)
             formData.append('experience', experience)
             formData.append('fees', fees)
-            formData.append('specialization', specialization)
-            formData.append('education', education)
+            formData.append('speciality', specialization)
+            formData.append('degree', education)
             formData.append('about', about)
             formData.append(
                 'address',
@@ -45,10 +45,10 @@ const AddDoctor = () => {
             )
 
             const { data } = await axios.post(
-                backendUrl + '/api/admin/add-doctor',
-                formData,
-                { headers: { aToken } }
-            )
+    backendUrl + '/api/admin/add-doctor',
+    formData,
+    { headers: { aToken, 'Content-Type': 'multipart/form-data' } }
+)
 
             if (data.success) {
                 toast.success(data.message)

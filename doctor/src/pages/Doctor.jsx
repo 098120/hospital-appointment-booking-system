@@ -4,9 +4,12 @@ import { AppContext } from '../context/AppContext'
 
 const Doctor = () => {
 
+
   const { speciality } = useParams()
   const navigate = useNavigate()
-  const { doctors } = useContext(AppContext)
+  const { doctorList } = useContext(AppContext)
+
+  console.log(doctorList)
 
   const [filterDoc, setFilterDoc] = useState([])
   const [showFilters, setShowFilters] = useState(false)
@@ -16,16 +19,21 @@ const Doctor = () => {
 
   // filter doctors
   useEffect(() => {
-    if (speciality) {
-      const formatted = speciality.replace('-', ' ')
-      const filtered = doctors.filter(
-        (doc) => doc.speciality.toLowerCase() === formatted.toLowerCase()
-      )
-      setFilterDoc(filtered)
+    if (doctorList && doctorList.length > 0) {
+      if (speciality) {
+        const formatted = speciality.split('-').join(' ')
+        const filtered = doctorList.filter(
+          (doc) => doc.speciality.toLowerCase() === formatted.toLowerCase()
+        )
+        console.log(doctorList, filtered)
+        setFilterDoc(filtered)
+      } else {
+        setFilterDoc(doctorList)
+      }
     } else {
-      setFilterDoc(doctors)
+      setFilterDoc([])
     }
-  }, [doctors, speciality])
+  }, [doctorList, speciality])
 
   return (
     <div>
@@ -77,30 +85,34 @@ const Doctor = () => {
 
         {/* ---------- Right Section ---------- */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {filterDoc.map((item) => (
-            <div
-              key={item._id}
-              onClick={() => navigate(`/appointment/${item._id}`)}
-              className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer
-                         hover:-translate-y-2 transition-all duration-500"
-            >
-              <img
-                className="bg-blue-50 w-full"
-                src={item.image}
-                alt={item.name}
-              />
+          {filterDoc && filterDoc.length > 0 ? (
+            filterDoc.map((item) => (
+              <div
+                key={item._id}
+                onClick={() => navigate(`/appointment/${item._id}`)}
+                className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer
+                           hover:-translate-y-2 transition-all duration-500"
+              >
+                <img
+                  className="bg-blue-50 w-full"
+                  src={item.image}
+                  alt={item.name}
+                />
 
-              <div className="p-4">
-                <div className="flex items-center gap-2 text-sm text-green-500 mb-1">
-                  <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                  <p>Available</p>
+                <div className="p-4">
+                  <div className="flex items-center gap-2 text-sm text-green-500 mb-1">
+                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+                    <p>Available</p>
+                  </div>
+
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">{item.speciality}</p>
                 </div>
-
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500">{item.speciality}</p>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>No doctors found</p>
+          )}
         </div>
 
       </div>
@@ -109,4 +121,3 @@ const Doctor = () => {
 }
 
 export default Doctor
-

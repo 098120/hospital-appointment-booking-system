@@ -31,6 +31,8 @@ const doctorList = async (req, res) => {
       .find({})
       .select('-password -email')
 
+      console.log(doctors)
+
     res.json({ success: true, doctors })
 
   } catch (error) {

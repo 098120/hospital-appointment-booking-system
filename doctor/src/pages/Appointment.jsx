@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
@@ -7,7 +7,7 @@ import RelatedDoctors from '../components/RelatedDoctors'
 const Appointment = () => {
 
   const { DocId } = useParams()
-  const { doctors, currencySymbol } = useContext(AppContext)
+  const { doctorList, currencySymbol } = useContext(AppContext)
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
   const [docInfo, setDocInfo] = useState(null)
@@ -16,13 +16,13 @@ const Appointment = () => {
   const [slotTime, setSlotTime] = useState('')
 
   // ---------------- Fetch Doctor Info ----------------
-  const fetchDocInfo = () => {
-    const selectedDoctor = doctors.find(doc => doc._id === DocId)
+  const fetchDocInfo = useCallback(() => {
+    const selectedDoctor = doctorList.find(doc => doc._id === DocId)
     setDocInfo(selectedDoctor)
-  }
+  }, [doctorList, DocId])
 
   // ---------------- Generate Available Slots ----------------
-  const getAvailableSlots = () => {
+  const getAvailableSlots = useCallback(() => {
     if (!docInfo) return
 
     const slots = []
@@ -61,16 +61,16 @@ const Appointment = () => {
     }
 
     setDocSlots(slots)
-  }
+  }, [docInfo])
 
   // ---------------- Effects ----------------
   useEffect(() => {
-    if (doctors.length > 0) fetchDocInfo()
-  }, [doctors, DocId])
+    if (doctorList.length > 0) fetchDocInfo
+  }, [doctorList, DocId, fetchDocInfo])
 
   useEffect(() => {
-    if (docInfo) getAvailableSlots()
-  }, [docInfo])
+    if (docInfo) getAvailableSlots
+  }, [docInfo, getAvailableSlots])
 
   // ---------------- Render ----------------
   return docInfo && (
