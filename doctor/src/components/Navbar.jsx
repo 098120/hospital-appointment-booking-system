@@ -7,7 +7,7 @@ const Navbar = () => {
 
   const navigate = useNavigate()
 
-  const { token, setToken } = useContext(AppContext)
+   const { token, setToken, userData } = useContext(AppContext)
 
   const [showMenu, setShowMenu] = useState(false)
 
@@ -42,9 +42,10 @@ const Navbar = () => {
       {/* RIGHT SIDE */}
       <div className='flex items-center gap-4'>
 
-        {token ? (
+        {
+        token && userData ? (
           <div className='relative group cursor-pointer flex items-center gap-2'>
-            <img className='w-8 rounded-full' src={assets.profile_pic} alt="" />
+            <img className='w-8 rounded-full' src={userData.image} alt="" />
             <img className='w-2.5' src={assets.dropdown_icon} alt="" />
 
             <div className='absolute right-0 top-10 hidden group-hover:block bg-white shadow rounded-md w-48 p-4 z-20'>

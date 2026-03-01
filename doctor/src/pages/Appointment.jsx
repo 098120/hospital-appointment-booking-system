@@ -1,14 +1,18 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
 import RelatedDoctors from '../components/RelatedDoctors'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const Appointment = () => {
 
   const { DocId } = useParams()
-  const { doctorList, currencySymbol } = useContext(AppContext)
+  const { doctorList, currencySymbol, backendUrl, token, getDoctorsData } = useContext(AppContext) // ✅ fixed line
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+  const navigate = useNavigate()
 
   const [docInfo, setDocInfo] = useState(null)
   const [docSlots, setDocSlots] = useState([])
@@ -63,13 +67,53 @@ const Appointment = () => {
     setDocSlots(slots)
   }, [docInfo])
 
+  const bookAppointment  = async () => {
+    if(!token) {
+      toast.warn('Login to book appointment')
+      return navigate('/login')
+    }
+
+    try {
+
+      const date = docSlots[slotIndex][0].datetime
+
+      let day = date.getDate()
+      let month = date.getMonth() + 1
+      let year = date.getFullYear()
+
+      // ✅ Fix: properly concatenate date
+      const slotDate = day + "_" + month + "_" + year
+
+      // ✅ Fix: proper string quotes and headers
+      const { data } = await axios.post(
+        backendUrl + '/api/user/book-appointment',
+        { docId: DocId, slotTime, slotDate },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      if (data.success) {
+        toast.success(data.message)
+        getDoctorsData() 
+        navigate('/appointments')
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
+      
+  }
+
+
   // ---------------- Effects ----------------
   useEffect(() => {
-    if (doctorList.length > 0) fetchDocInfo
+    if (doctorList.length > 0) fetchDocInfo()
   }, [doctorList, DocId, fetchDocInfo])
 
   useEffect(() => {
-    if (docInfo) getAvailableSlots
+    if (docInfo) getAvailableSlots()
   }, [docInfo, getAvailableSlots])
 
   // ---------------- Render ----------------
@@ -130,7 +174,7 @@ const Appointment = () => {
           ))}
         </div>
 
-        <button className='bg-primary text-white px-14 py-3 rounded-full my-6'>
+        <button onClick={bookAppointment} className='bg-primary text-white px-14 py-3 rounded-full my-6'>
           Book an appointment
         </button>
       </div>
@@ -143,4 +187,3 @@ const Appointment = () => {
 }
 
 export default Appointment
-
